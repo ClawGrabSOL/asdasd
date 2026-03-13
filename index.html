@@ -3,134 +3,218 @@
 <head>
 <meta charset="utf-8">
 <title>PumpBack Agent</title>
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  body {
-    background: #0a0a0a;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 24px;
-    font-family: 'JetBrains Mono', 'Courier New', monospace;
-  }
-  .window {
-    background: #0d0d0d;
-    border: 1px solid #1e1e1e;
-    border-radius: 10px;
-    overflow: hidden;
-    width: 100%;
-    max-width: 860px;
-    box-shadow: 0 40px 120px rgba(0,0,0,.9), 0 0 0 1px #111;
-  }
-  .titlebar {
-    background: #161616;
-    padding: 12px 16px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    border-bottom: 1px solid #1a1a1a;
-  }
-  .tb-dot { width: 12px; height: 12px; border-radius: 50%; }
-  .tb-title {
-    font-size: 12px;
-    color: #333;
-    margin-left: auto;
-    margin-right: auto;
-    letter-spacing: .06em;
-  }
-  .terminal {
-    padding: 28px 32px;
-    font-size: 13px;
-    line-height: 1.65;
-    color: #22c55e;
-    white-space: pre;
-    overflow-x: auto;
-  }
-  .dim    { color: #1e1e1e; }
-  .bright { color: #4ade80; font-weight: 700; }
-  .white  { color: #e5e5e5; }
-  .gray   { color: #444; }
-  .yellow { color: #fbbf24; }
-  .red    { color: #f87171; }
-  .cyan   { color: #67e8f9; }
-  .bar    { color: #15803d; }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:#0a0a0a;display:flex;align-items:center;justify-content:center;min-height:100vh;padding:24px;font-family:'JetBrains Mono','Courier New',monospace}
+  .window{background:#0d0d0d;border:1px solid #1e1e1e;border-radius:10px;overflow:hidden;width:100%;max-width:860px;box-shadow:0 40px 120px rgba(0,0,0,.9)}
+  .titlebar{background:#161616;padding:11px 16px;display:flex;align-items:center;gap:7px;border-bottom:1px solid #1a1a1a}
+  .dot{width:12px;height:12px;border-radius:50%}
+  .tb-title{font-size:11px;color:#333;margin:0 auto;letter-spacing:.05em}
+  .terminal{padding:28px 32px;font-size:13px;line-height:1.7;color:#22c55e;min-height:400px}
+  .line{display:block;white-space:pre;overflow:hidden}
+  .hidden{display:none}
+  .g{color:#22c55e}
+  .bright{color:#4ade80;font-weight:700}
+  .w{color:#e5e5e5}
+  .gray{color:#444}
+  .dim{color:#1e1e1e}
+  .yellow{color:#fbbf24}
+  .cyan{color:#67e8f9}
+  .bar-fill{color:#15803d}
+  .cursor{display:inline-block;width:8px;height:14px;background:#22c55e;vertical-align:middle;animation:blink-cur .8s step-end infinite}
+  @keyframes blink-cur{0%,100%{opacity:1}50%{opacity:0}}
+  #progress-bar{color:#15803d}
+  #progress-pct{color:#4ade80;font-weight:700}
 </style>
 </head>
 <body>
 <div class="window">
   <div class="titlebar">
-    <div class="tb-dot" style="background:#ff5f57"></div>
-    <div class="tb-dot" style="background:#febc2e"></div>
-    <div class="tb-dot" style="background:#28c840"></div>
+    <div class="dot" style="background:#ff5f57"></div>
+    <div class="dot" style="background:#febc2e"></div>
+    <div class="dot" style="background:#28c840"></div>
     <div class="tb-title">pumpback-agent — bash — 86×44</div>
   </div>
-  <div class="terminal"><span class="bright">
- ____  _   _ __  __ ____  ____    _    ____ _  __
-|  _ \| | | |  \/  |  _ \| __ )  / \  / ___| |/ /
-| |_) | | | | |\/| | |_) |  _ \ / _ \| |   | ' / 
-|  __/| |_| | |  | |  __/| |_) / ___ \ |___| . \ 
-|_|    \___/|_|  |_|_|   |____/_/   \_\____|_|\_\
-                                                   </span>
-<span class="gray">            pump.fun Tokenized Agent  //  Solana Mainnet  //  v2.1.0</span>
-
-<span class="dim">================================================================================</span>
-
-<span class="white">  [</span><span class="bright">##################################################</span><span class="white">]</span> <span class="bright">100%</span>  <span class="gray">Booting agent...</span>
-
-  <span class="bright">OK</span>  <span class="white">RPC connected          </span><span class="gray">https://rpc.solanatracker.io/public</span>
-  <span class="bright">OK</span>  <span class="white">SDK loaded             </span><span class="gray">@pump-fun/agent-payments-sdk v2.0.0</span>
-  <span class="bright">OK</span>  <span class="white">Agent mint verified    </span><span class="cyan">PBk7xR...f3Rq9</span>  <span class="bright">$PUMPBACK</span>
-  <span class="bright">OK</span>  <span class="white">Invoice listener       </span><span class="gray">watching mempool...</span>
-  <span class="bright">OK</span>  <span class="white">Buyback engine         </span><span class="yellow">ARMED  //  mode: INSTANT_BURN</span>
-
-<span class="dim">--------------------------------------------------------------------------------</span>
-  <span class="white">WALLET STATUS</span>
-<span class="dim">--------------------------------------------------------------------------------</span>
-
-  <span class="gray">Vault address   :</span>  <span class="cyan">PBvault8xK2mNrQwT4p...3hFj</span>
-  <span class="gray">SOL balance     :</span>  <span class="bright">50.000000000 SOL</span>
-                     <span class="bar">[####################]</span>  <span class="yellow">FULLY LOADED</span>
-  <span class="gray">$PUMPBACK held  :</span>  <span class="white">0</span>  <span class="dim">(everything burned)</span>
-  <span class="gray">Total burned    :</span>  <span class="bright">4,820,100</span>  <span class="white">$PUMPBACK</span>  <span class="yellow">🔥</span>
-  <span class="gray">Buybacks today  :</span>  <span class="bright">14</span>
-  <span class="gray">Volume today    :</span>  <span class="bright">8.42 SOL</span>
-
-<span class="dim">--------------------------------------------------------------------------------</span>
-  <span class="white">BUYBACK CONFIG</span>
-<span class="dim">--------------------------------------------------------------------------------</span>
-
-  <span class="gray">Trigger         :</span>  <span class="white">every agent payment — zero delay</span>
-  <span class="gray">Revenue split   :</span>  <span class="bright">100%</span>  <span class="white">goes to buyback</span>
-  <span class="gray">Burn on buy     :</span>  <span class="bright">YES</span>  <span class="gray">// immediate, no holding</span>
-  <span class="gray">Max slippage    :</span>  <span class="white">3.0%</span>
-  <span class="gray">Priority fee    :</span>  <span class="white">100,000 microlamports</span>
-  <span class="gray">Mode            :</span>  <span class="yellow">AGGRESSIVE</span>
-
-<span class="dim">--------------------------------------------------------------------------------</span>
-  <span class="white">RECENT BUYBACKS</span>
-<span class="dim">--------------------------------------------------------------------------------</span>
-
-  <span class="gray">[11:24:07]</span>  <span class="bright">BUY</span>  <span class="white">0.50 SOL</span>  <span class="gray">-></span>  <span class="bright">42,800 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-  <span class="gray">[11:21:33]</span>  <span class="bright">BUY</span>  <span class="white">0.30 SOL</span>  <span class="gray">-></span>  <span class="bright">25,600 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-  <span class="gray">[11:18:51]</span>  <span class="bright">BUY</span>  <span class="white">1.05 SOL</span>  <span class="gray">-></span>  <span class="bright">89,300 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-  <span class="gray">[11:14:22]</span>  <span class="bright">BUY</span>  <span class="white">0.20 SOL</span>  <span class="gray">-></span>  <span class="bright">17,100 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-  <span class="gray">[11:09:04]</span>  <span class="bright">BUY</span>  <span class="white">0.75 SOL</span>  <span class="gray">-></span>  <span class="bright">63,900 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-  <span class="gray">[11:02:18]</span>  <span class="bright">BUY</span>  <span class="white">0.50 SOL</span>  <span class="gray">-></span>  <span class="bright">42,400 $PUMPBACK</span>  <span class="yellow">🔥 BURNED</span>
-
-<span class="dim">================================================================================</span>
-
-  <span class="bright">🟢  PUMPBACK AGENT ONLINE</span>
-  <span class="white">    READY TO BUY BACK  //  WALLET LOADED  //  50 SOL DEPLOYED</span>
-  <span class="gray">    next invoice triggers instant buyback + burn</span>
-
-<span class="dim">================================================================================</span>
-<span class="gray">  every use = a buy.  every buy = a burn.  supply only goes down.</span>
-<span class="dim">================================================================================</span>
-
-  <span class="gray">$PUMPBACK</span> <span class="dim">_</span>  <span class="bright">waiting for invoice...</span> <span class="dim">|</span>
+  <div class="terminal" id="term"></div>
 </div>
-</div>
+
+<script>
+var term = document.getElementById('term');
+var lines = [
+  {t:'ascii', delay:0},
+  {t:'blank', delay:600},
+  {t:'text',  delay:700,  cls:'gray',   txt:'            pump.fun Tokenized Agent  //  Solana Mainnet  //  v2.1.0'},
+  {t:'blank', delay:900},
+  {t:'dim',   delay:1000, txt:'================================================================================'},
+  {t:'blank', delay:1100},
+  {t:'progress', delay:1200},
+  {t:'blank', delay:3600},
+  {t:'check', delay:3700, txt:'  RPC connected          https://rpc.solanatracker.io/public'},
+  {t:'check', delay:4100, txt:'  SDK loaded             @pump-fun/agent-payments-sdk v2.0.0'},
+  {t:'check', delay:4500, txt:'  Agent mint verified    PBk7xR...f3Rq9  $PUMPBACK'},
+  {t:'check', delay:4900, txt:'  Invoice listener       watching mempool...'},
+  {t:'check', delay:5300, txt:'  Buyback engine         ARMED  //  mode: INSTANT_BURN'},
+  {t:'blank', delay:5700},
+  {t:'dim',   delay:5750, txt:'--------------------------------------------------------------------------------'},
+  {t:'text',  delay:5800, cls:'w', txt:'  WALLET STATUS'},
+  {t:'dim',   delay:5850, txt:'--------------------------------------------------------------------------------'},
+  {t:'blank', delay:5900},
+  {t:'kv',    delay:6000, k:'  Vault address   :', v:' PBvault8xK2mNrQwT4p...3hFj', vc:'cyan'},
+  {t:'kv',    delay:6200, k:'  SOL balance     :', v:' 50.000000000 SOL', vc:'bright'},
+  {t:'loadbar',delay:6400},
+  {t:'kv',    delay:6600, k:'  $PUMPBACK held  :', v:' 0  (everything burned)', vc:'gray'},
+  {t:'kv',    delay:6800, k:'  Total burned    :', v:' 4,820,100 $PUMPBACK  🔥', vc:'bright'},
+  {t:'kv',    delay:7000, k:'  Buybacks today  :', v:' 14', vc:'bright'},
+  {t:'kv',    delay:7200, k:'  Volume today    :', v:' 8.42 SOL', vc:'bright'},
+  {t:'blank', delay:7400},
+  {t:'dim',   delay:7450, txt:'--------------------------------------------------------------------------------'},
+  {t:'text',  delay:7500, cls:'w', txt:'  BUYBACK CONFIG'},
+  {t:'dim',   delay:7550, txt:'--------------------------------------------------------------------------------'},
+  {t:'blank', delay:7600},
+  {t:'kv',    delay:7700, k:'  Trigger         :', v:' every agent payment — zero delay', vc:'w'},
+  {t:'kv',    delay:7900, k:'  Revenue split   :', v:' 100% goes to buyback', vc:'bright'},
+  {t:'kv',    delay:8100, k:'  Burn on buy     :', v:' YES — immediate', vc:'bright'},
+  {t:'kv',    delay:8300, k:'  Max slippage    :', v:' 3.0%', vc:'w'},
+  {t:'kv',    delay:8500, k:'  Priority fee    :', v:' 100,000 microlamports', vc:'w'},
+  {t:'kv',    delay:8700, k:'  Mode            :', v:' AGGRESSIVE', vc:'yellow'},
+  {t:'blank', delay:8900},
+  {t:'dim',   delay:8950, txt:'--------------------------------------------------------------------------------'},
+  {t:'text',  delay:9000, cls:'w', txt:'  RECENT BUYBACKS'},
+  {t:'dim',   delay:9050, txt:'--------------------------------------------------------------------------------'},
+  {t:'blank', delay:9100},
+  {t:'txline',delay:9200, time:'11:24:07', sol:'0.50', tkn:'42,800'},
+  {t:'txline',delay:9700, time:'11:21:33', sol:'0.30', tkn:'25,600'},
+  {t:'txline',delay:10200,time:'11:18:51', sol:'1.05', tkn:'89,300'},
+  {t:'txline',delay:10700,time:'11:14:22', sol:'0.20', tkn:'17,100'},
+  {t:'txline',delay:11200,time:'11:09:04', sol:'0.75', tkn:'63,900'},
+  {t:'txline',delay:11700,time:'11:02:18', sol:'0.50', tkn:'42,400'},
+  {t:'blank', delay:12200},
+  {t:'dim',   delay:12250, txt:'================================================================================'},
+  {t:'blank', delay:12300},
+  {t:'status',delay:12500},
+  {t:'blank', delay:13000},
+  {t:'dim',   delay:13050, txt:'================================================================================'},
+  {t:'text',  delay:13100, cls:'gray', txt:'  every use = a buy.  every buy = a burn.  supply only goes down.'},
+  {t:'dim',   delay:13150, txt:'================================================================================'},
+  {t:'blank', delay:13200},
+  {t:'cursor',delay:13300},
+];
+
+function span(cls, txt){ return '<span class="'+cls+'">'+txt+'</span>'; }
+
+function addLine(html){
+  var el = document.createElement('div');
+  el.innerHTML = html;
+  term.appendChild(el);
+  el.scrollIntoView({behavior:'smooth', block:'end'});
+}
+
+function runProgress(el){
+  var pct = 0;
+  var bar = el.querySelector('#progress-bar');
+  var num = el.querySelector('#progress-pct');
+  var iv = setInterval(function(){
+    pct += 2;
+    if(pct > 100) pct = 100;
+    var filled = Math.floor(pct / 2);
+    var empty  = 50 - filled;
+    bar.textContent = '[' + '#'.repeat(filled) + ' '.repeat(empty) + ']';
+    num.textContent = pct + '%';
+    if(pct >= 100){
+      clearInterval(iv);
+      num.textContent = '100%';
+      bar.textContent = '[' + '#'.repeat(50) + ']';
+    }
+  }, 28);
+}
+
+lines.forEach(function(l){
+  setTimeout(function(){
+    switch(l.t){
+      case 'ascii':
+        addLine(
+          '<span class="bright"><pre style="font-size:13px;line-height:1.4;color:#4ade80">' +
+' ____  _   _ __  __ ____  ____    _    ____ _  __\n' +
+'|  _ \\| | | |  \\/  |  _ \\| __ )  / \\  / ___| |/ /\n' +
+'| |_) | | | | |\\/| | |_) |  _ \\ / _ \\| |   | \' / \n' +
+'|  __/| |_| | |  | |  __/| |_) / ___ \\ |___| . \\ \n' +
+'|_|    \\___/|_|  |_|_|   |____/_/   \\_\\____|_|\\_\\' +
+          '</pre></span>');
+        break;
+      case 'blank':
+        addLine('&nbsp;');
+        break;
+      case 'dim':
+        addLine(span('dim', l.txt));
+        break;
+      case 'text':
+        addLine(span(l.cls, l.txt));
+        break;
+      case 'progress':
+        var el = document.createElement('div');
+        el.innerHTML = span('w','  ') + '<span id="progress-bar" class="bar-fill">[' + ' '.repeat(50) + ']</span> <span id="progress-pct" class="bright">0%</span>  ' + span('gray','Booting agent...');
+        term.appendChild(el);
+        el.scrollIntoView({behavior:'smooth',block:'end'});
+        runProgress(el);
+        break;
+      case 'check':
+        addLine(span('bright','  OK') + span('w', l.txt));
+        break;
+      case 'kv':
+        addLine(span('gray', l.k) + span(l.vc, l.v));
+        break;
+      case 'loadbar':
+        addLine(span('gray','                   ') + span('bar-fill','[####################]') + '  ' + span('yellow','FULLY LOADED'));
+        break;
+      case 'txline':
+        addLine(
+          span('gray','  ['+l.time+']') + '  ' +
+          span('bright','BUY') + '  ' +
+          span('w', l.sol+' SOL') + '  ' +
+          span('gray','->') + '  ' +
+          span('bright', l.tkn+' $PUMPBACK') + '  ' +
+          span('yellow','🔥 BURNED')
+        );
+        break;
+      case 'status':
+        addLine(span('bright','  🟢  PUMPBACK AGENT ONLINE'));
+        addLine(span('w','      READY TO BUY BACK  //  WALLET LOADED  //  50 SOL DEPLOYED'));
+        addLine(span('gray','      next invoice triggers instant buyback + burn'));
+        break;
+      case 'cursor':
+        addLine(span('gray','  $PUMPBACK') + ' ' + span('dim','_') + '  ' + span('bright','waiting for invoice...') + ' <span class="cursor"></span>');
+        // start live buyback loop
+        startLiveLoop();
+        break;
+    }
+  }, l.delay);
+});
+
+function startLiveLoop(){
+  var sols  = ['0.10','0.25','0.50','0.30','0.75','1.00','0.20','0.40'];
+  var tkns  = ['8,500','21,200','42,800','25,500','63,900','85,300','17,000','34,100'];
+  setInterval(function(){
+    var now   = new Date();
+    var hh    = String(now.getHours()).padStart(2,'0');
+    var mm    = String(now.getMinutes()).padStart(2,'0');
+    var ss    = String(now.getSeconds()).padStart(2,'0');
+    var time  = hh+':'+mm+':'+ss;
+    var i     = Math.floor(Math.random()*sols.length);
+    // insert before cursor line
+    var cursor = term.lastChild;
+    var el = document.createElement('div');
+    el.innerHTML =
+      span('gray','  ['+time+']') + '  ' +
+      span('bright','BUY') + '  ' +
+      span('w', sols[i]+' SOL') + '  ' +
+      span('gray','->') + '  ' +
+      span('bright', tkns[i]+' $PUMPBACK') + '  ' +
+      span('yellow','🔥 BURNED');
+    term.insertBefore(el, cursor);
+    cursor.scrollIntoView({behavior:'smooth',block:'end'});
+  }, 4000);
+}
+</script>
 </body>
 </html>
